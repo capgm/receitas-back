@@ -3,12 +3,13 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 
 const app = express();
-const port = 8080;
+const port = process.env.PORT || 8080;
+const db = require("./config/db");
 
 app.use(cors());
 app.use(express.json());
 
-mongoose.connect("mongodb://localhost:27017/receita");
+mongoose.connect(db.mongoURI);
 
 const receitaSchema = new mongoose.Schema({
   nome: String,
