@@ -45,6 +45,7 @@ app.get("/categorias", async (req, res) => {
 });
 
 app.post("/receitas", async (req, res) => {
+
   const novaReceita = new Receita({
     nome: req.body.nome,
     categoria: req.body.categoria,
@@ -113,6 +114,7 @@ app.post("/signup", async (req, res) => {
 
 
 app.get("/receitas", async (req, res) => {
+
   await Receita.find()
     .then((receitas) => {
       res.json(receitas);
