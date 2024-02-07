@@ -36,6 +36,12 @@ const Categoria = mongoose.model("categorias", categoriaSchema);
 const Receita = mongoose.model("receitas", receitaSchema);
 const Usuario = mongoose.model("usuarios", usuarioSchema);
 
+router.get("/", async(req, res)=>{
+  res.json({
+    sucesso: "sucesso"
+  });
+})
+
 router.get("/categorias", async (req, res) => {
   await Categoria.find()
     .then((categorias) => {
