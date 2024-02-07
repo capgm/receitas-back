@@ -1,6 +1,8 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const serverless = require("serverless-http")
+const router = express.Router();
 
 const app = express();
 const port = process.env.PORT || 8080;
@@ -34,7 +36,7 @@ const Categoria = mongoose.model("categorias", categoriaSchema);
 const Receita = mongoose.model("receitas", receitaSchema);
 const Usuario = mongoose.model("usuarios", usuarioSchema);
 
-app.get("/categorias", async (req, res) => {
+router.get("/categorias", async (req, res) => {
   await Categoria.find()
     .then((categorias) => {
       res.json(categorias);
@@ -44,7 +46,7 @@ app.get("/categorias", async (req, res) => {
     });
 });
 
-app.post("/receitas", async (req, res) => {
+router.post("/receitas", async (req, res) => {
 
   const novaReceita = new Receita({
     nome: req.body.nome,
@@ -66,7 +68,7 @@ app.post("/receitas", async (req, res) => {
   }
 });
 
-app.post("/signin", async (req, res) => {
+router.post("/signin", async (req, res) => {
   const usuario = new Usuario({
     email: req.body.email,
     categoria: req.body.senha
@@ -91,7 +93,7 @@ app.post("/signin", async (req, res) => {
   }
 });
 
-app.post("/signup", async (req, res) => {
+router.post("/signup", async (req, res) => {
   const novoUsuario = new Usuario({
     nome: req.body.nome,
     senha: req.body.senha,
@@ -113,7 +115,7 @@ app.post("/signup", async (req, res) => {
 });
 
 
-app.get("/receitas", async (req, res) => {
+router.get("/receitas", async (req, res) => {
 
   await Receita.find()
     .then((receitas) => {
@@ -124,7 +126,7 @@ app.get("/receitas", async (req, res) => {
     });
 });
 
-app.get("/receita/:id", async (req, res) => {
+router.get("/receita/:id", async (req, res) => {
 
   await Receita.findById(req.params.id)
     .then((receita) => {
@@ -136,7 +138,7 @@ app.get("/receita/:id", async (req, res) => {
 });
 
 
-app.get("/receitas/consulta/:categoria", async (req, res) => {
+router.get("/receitas/consulta/:categoria", async (req, res) => {
 
     let categoria = req.params.categoria;
 
@@ -150,7 +152,7 @@ app.get("/receitas/consulta/:categoria", async (req, res) => {
   });
 
 // Rota PUT para atualizar um item pelo ID
-app.put("/receitas/:id", async (req, res) => {
+router.put("/receitas/:id", async (req, res) => {
   await Receita.findByIdAndUpdate(req.params.id, req.body)
     .then(() => {
       console.log("alterou");
@@ -162,7 +164,7 @@ app.put("/receitas/:id", async (req, res) => {
 });
 
 // Rota DELETE para excluir um item pelo ID
-app.delete("/receitas/:id", async (req, res) => {
+router.delete("/receitas/:id", async (req, res) => {
   const deletedItem = await Receita.findByIdAndDelete(req.params.id)
     .then(() => {
       console.log("excluiu com sucesso");
@@ -172,6 +174,11 @@ app.delete("/receitas/:id", async (req, res) => {
     });
   res.json(deletedItem);
 });
+
+app.use('/.netlify/functions/api', router);
+
+//module.exports.handler =  serverless(app)
+
 
 app.listen(port, () => {
   console.log(`Servidor rodando em http://localhost:${port}`);
