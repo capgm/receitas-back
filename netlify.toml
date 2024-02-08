@@ -1,3 +1,5 @@
 [build]
 
-functions = "functions"
+
+command = "npm run build"  # ou o comando necessário para construir seu projeto
+publish = "dist"  # ou o diretório onde está o resultado da construção do seu projeto
