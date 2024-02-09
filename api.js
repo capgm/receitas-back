@@ -1,7 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
-const serverless = require("serverless-http")
+const serverless = require("serverless-http");
 const router = express.Router();
 
 const app = express();
@@ -11,14 +11,20 @@ const db = require("./config/db");
 app.use(cors());
 app.use(express.json());
 
-mongoose.connect(db.mongoURI);
+if (process.env.NODE_ENV == "production") {
+  mongoose.connect(
+    "mongodb+srv://usuarioadmin:9u0TBnoFXmgqwttC@receita0.zjxxt2t.mongodb.net/?retryWrites=true&w=majority"
+  );
+} else {
+  mongoose.connect("mongodb://localhost:27017/receita");
+}
 
 const receitaSchema = new mongoose.Schema({
   nome: String,
   categoria: String,
   ingredientes: String,
   modoPreparo: String,
-  urlImgaem : String
+  urlImgaem: String,
 });
 
 const categoriaSchema = new mongoose.Schema({
@@ -29,18 +35,18 @@ const usuarioSchema = new mongoose.Schema({
   nome: String,
   email: String,
   senha: String,
-  urlImagemProfile: String
+  urlImagemProfile: String,
 });
 
 const Categoria = mongoose.model("categorias", categoriaSchema);
 const Receita = mongoose.model("receitas", receitaSchema);
 const Usuario = mongoose.model("usuarios", usuarioSchema);
 
-router.get("/", async(req, res)=>{
+router.get("/", async (req, res) => {
   res.json({
-    sucesso: "sucesso"
+    sucesso: "sucesso",
   });
-})
+});
 
 router.get("/categorias", async (req, res) => {
   await Categoria.find()
@@ -53,7 +59,6 @@ router.get("/categorias", async (req, res) => {
 });
 
 router.post("/receitas", async (req, res) => {
-
   const novaReceita = new Receita({
     nome: req.body.nome,
     categoria: req.body.categoria,
@@ -77,24 +82,22 @@ router.post("/receitas", async (req, res) => {
 router.post("/signin", async (req, res) => {
   const usuario = new Usuario({
     email: req.body.email,
-    categoria: req.body.senha
+    categoria: req.body.senha,
   });
   try {
-
     const email = usuario.email;
     const password = usuario.senha;
-    console.log(usuario)
-    await Usuario
-      .find({email: email, senha: password})
+    console.log(usuario);
+    await Usuario.find({ email: email, senha: password })
       .then((user) => {
         res.send(user);
       })
       .catch((erro) => {
-        res.send({islogado : false});
+        res.send({ islogado: false });
         console.log(erro);
       });
   } catch (erro) {
-    res.send({islogado : false});
+    res.send({ islogado: false });
     console.log(erro);
   }
 });
@@ -103,9 +106,9 @@ router.post("/signup", async (req, res) => {
   const novoUsuario = new Usuario({
     nome: req.body.nome,
     senha: req.body.senha,
-    email: req.body.email
+    email: req.body.email,
   });
-  console.log(novoUsuario)
+  console.log(novoUsuario);
   try {
     await novoUsuario
       .save()
@@ -120,9 +123,7 @@ router.post("/signup", async (req, res) => {
   }
 });
 
-
 router.get("/receitas", async (req, res) => {
-
   await Receita.find()
     .then((receitas) => {
       res.json(receitas);
@@ -133,7 +134,6 @@ router.get("/receitas", async (req, res) => {
 });
 
 router.get("/receita/:id", async (req, res) => {
-
   await Receita.findById(req.params.id)
     .then((receita) => {
       res.json(receita);
@@ -143,19 +143,17 @@ router.get("/receita/:id", async (req, res) => {
     });
 });
 
-
 router.get("/receitas/consulta/:categoria", async (req, res) => {
+  let categoria = req.params.categoria;
 
-    let categoria = req.params.categoria;
-
-    await Receita.find({categoria: categoria})
-      .then((receitas) => {
-        res.json(receitas);
-      })
-      .catch((erro) => {
-        res.json({ error: erro });
-      });
-  });
+  await Receita.find({ categoria: categoria })
+    .then((receitas) => {
+      res.json(receitas);
+    })
+    .catch((erro) => {
+      res.json({ error: erro });
+    });
+});
 
 // Rota PUT para atualizar um item pelo ID
 router.put("/receitas/:id", async (req, res) => {
@@ -181,10 +179,9 @@ router.delete("/receitas/:id", async (req, res) => {
   res.json(deletedItem);
 });
 
-app.use('/.netlify/functions/api', router);
+app.use("/.netlify/functions/api", router);
 
 //module.exports.handler =  serverless(app)
-
 
 app.listen(port, () => {
   console.log(`Servidor rodando em http://localhost:${port}`);
