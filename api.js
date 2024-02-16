@@ -8,7 +8,7 @@ const router = express.Router();
 const app = express();
 const port = process.env.PORT || 8080;
 
-app.use(cors());
+app.use(cors({ origin: 'https://receitas-front.onrender.com' }));
 app.use(bodyParser.json());
 
 if (process.env.NODE_ENV == "production") {
