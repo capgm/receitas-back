@@ -2,15 +2,19 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const serverless = require("serverless-http");
-const bodyParser = require('body-parser');
+const bodyParser = require("body-parser");
 const router = express.Router();
 
 const app = express();
 const port = process.env.PORT || 8080;
 
-app.use(cors({ origin: 'https://receitas-front.onrender.com',
-methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-headers: 'Content-Type, Authorization' }));
+app.use(
+  cors({
+    origin: "https://receitas-front.onrender.com",
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    headers: "Content-Type, Authorization"
+  })
+);
 app.use(bodyParser.json());
 
 if (process.env.NODE_ENV == "production") {
