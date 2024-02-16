@@ -8,11 +8,25 @@ const router = express.Router();
 const app = express();
 const port = process.env.PORT || 8080;
 
+const allowedOrigins = [
+  "https://receitas-front.onrender.com",
+  "https://receitas-front.onrender.com:10000",
+  "http://receitas-front.onrender.com",
+  "http://receitas-front.onrender.com:10000",
+];
+
 app.use(
   cors({
-    origin: "https://receitas-front.onrender.com",
+    origin: function (origin, callback) {
+      // Verifica se a origem está na lista permitida ou se é uma solicitação sem origem (como requisições locais)
+      if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-    headers: "Content-Type, Authorization"
+    headers: "Content-Type, Authorization",
   })
 );
 app.use(bodyParser.json());
