@@ -48,6 +48,12 @@ app.get("/", async (req, res) => {
   });
 });
 
+app.get("/signup", async (req, res) => {
+  res.json({
+    sucesso: "sucesso",
+  });
+});
+
 app.get("/categorias", async (req, res) => {
   await Categoria.find()
     .then((categorias) => {
