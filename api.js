@@ -32,15 +32,15 @@ app.use(
 );
 app.use(bodyParser.json());
 
-const uri = '';
+let uri = '';
 if (process.env.NODE_ENV == "production") {
   
-  uri = "mongodb+srv://usuarioadmin:9u0TBnoFXmgqwttC@receita0.zjxxt2t.mongodb.net/?retryWrites=true&w=majority"
+  uri = "mongodb+srv://usuarioadmin:9u0TBnoFXmgqwttC@receita0.zjxxt2t.mongodb.net/?retryWrites=true&w=majority";
   //mongoose.connect(
   //  "mongodb+srv://usuarioadmin:9u0TBnoFXmgqwttC@receita0.zjxxt2t.mongodb.net/?retryWrites=true&w=majority"
   //);
 } else {
-  uri = "mongodb://localhost:27017/receita"
+  uri = "mongodb://localhost:27017/receita";
   //mongoose.connect("mongodb://localhost:27017/receita");
 }
 
