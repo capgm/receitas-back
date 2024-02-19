@@ -13,6 +13,7 @@ const allowedOrigins = [
   "https://receitas-front.onrender.com:10000",
   "http://receitas-front.onrender.com",
   "http://receitas-front.onrender.com:10000",
+  "mongodb+srv://usuarioadmin:9u0TBnoFXmgqwttC@receita0.zjxxt2t.mongodb.net/?retryWrites=true&w=majority"
 ];
 
 app.use(
@@ -31,13 +32,27 @@ app.use(
 );
 app.use(bodyParser.json());
 
+const uri = '';
 if (process.env.NODE_ENV == "production") {
-  mongoose.connect(
-    "mongodb+srv://usuarioadmin:9u0TBnoFXmgqwttC@receita0.zjxxt2t.mongodb.net/?retryWrites=true&w=majority"
-  );
+  
+  uri = "mongodb+srv://usuarioadmin:9u0TBnoFXmgqwttC@receita0.zjxxt2t.mongodb.net/?retryWrites=true&w=majority"
+  //mongoose.connect(
+  //  "mongodb+srv://usuarioadmin:9u0TBnoFXmgqwttC@receita0.zjxxt2t.mongodb.net/?retryWrites=true&w=majority"
+  //);
 } else {
-  mongoose.connect("mongodb://localhost:27017/receita");
+  uri = "mongodb://localhost:27017/receita"
+  //mongoose.connect("mongodb://localhost:27017/receita");
 }
+
+/// Conectar ao banco de dados MongoDB mLab
+mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+const db = mongoose.connection;
+
+// Lidar com eventos de conexão ao banco de dados
+db.on('error', console.error.bind(console, 'Erro de conexão ao MongoDB:'));
+db.once('open', () => {
+  console.log('Conectado ao banco de dados MongoDB');
+});
 
 const receitaSchema = new mongoose.Schema({
   nome: String,
