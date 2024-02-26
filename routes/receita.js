@@ -62,7 +62,7 @@ router.get("/receitas/consulta/:id_categoria/:nome", async (req, res) => {
   if(nome !=  ""){
 
     if(nome.length > 4){
-      objFiltro.nome = { $regex: startWithTerm, $options: 'i' };
+      objFiltro.nome = { $regex: nome, $options: 'i' };
     }else{
       objFiltro.nome = nome;
     }    
