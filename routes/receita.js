@@ -4,7 +4,6 @@ const mongoose = require("mongoose");
 require("../models/Receita");
 require("../models/Categoria");
 const Receita = mongoose.model("receitas");
-const Categoria = mongoose.model("categorias");
 
 router.post("/receitas", async (req, res) => {
   const novaReceita = new Receita({
