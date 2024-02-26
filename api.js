@@ -21,7 +21,7 @@ if (process.env.NODE_ENV == "production") {
 }
 
 /// Conectar ao banco de dados MongoDB mLab
-mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect(uri);
 const db = mongoose.connection;
 
 // Lidar com eventos de conexão ao banco de dados
