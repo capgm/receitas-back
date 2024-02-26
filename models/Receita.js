@@ -19,6 +19,10 @@ const Receita = new Schema({
         type: String,
         required: false
     },
+    rating:{
+        type: Number,
+        required: false
+    },
     id_usuario: { type: mongoose.Schema.Types.ObjectId, ref: 'Usuario', required: true },
     date:{
         type: Date,

@@ -2,18 +2,18 @@ const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
 require("../models/Receita");
+require("../models/Categoria");
 const Receita = mongoose.model("receitas");
+const Categoria = mongoose.model("categorias");
 
 router.post("/receitas", async (req, res) => {
   const novaReceita = new Receita({
     nome: req.body.nome,
-    id_usuario: req.body.id_categoria,
+    id_usuario: req.body.id_usuario,
     id_categoria: req.body.id_categoria,
     ingredientes: req.body.ingredientes,
     modoPreparo: req.body.modoPreparo,
   });
-
-  console.log(novaReceita);
 
   try {
     await novaReceita
@@ -40,8 +40,10 @@ router.get("/receitas", async (req, res) => {
 });
 
 router.get("/receita/:id", async (req, res) => {
+ 
   await Receita.findById(req.params.id)
-    .then((receita) => {
+    .then( async (receita) => {
+      console.log(receita )
       res.json(receita);
     })
     .catch((erro) => {
@@ -49,10 +51,26 @@ router.get("/receita/:id", async (req, res) => {
     });
 });
 
-router.get("/receitas/consulta/:categoria", async (req, res) => {
-  let categoria = req.params.categoria;
+router.get("/receitas/consulta/:id_categoria/:nome", async (req, res) => {
+  let id_categoria = req.params.id_categoria;
+  let nome = req.params.nome;
 
-  await Receita.find({ categoria: categoria })
+  let objFiltro = new Object();
+
+  if(id_categoria != -1 ){    
+    objFiltro.id_categoria = id_categoria;
+  }
+
+  if(nome !=  ""){
+
+    if(nome.length > 4){
+      objFiltro.nome = { $regex: startWithTerm, $options: 'i' };
+    }else{
+      objFiltro.nome = nome;
+    }    
+  }
+
+ await Receita.find(objFiltro)
     .then((receitas) => {
       res.json(receitas);
     })
